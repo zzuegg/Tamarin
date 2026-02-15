@@ -44,17 +44,17 @@ public class ActionManifest{
                 findDuplicates(actionSets.stream().map(ActionSet::getName))
                         .map(name -> "Duplicate action set name: " + name)
                         .map(ValidationProblem::new)
-                    .toList();
+                        .collect(Collectors.toList());
 
 
         Collection<ValidationProblem> duplicateActionTranslatedName =
                 findDuplicates(actionSets.stream().map(ActionSet::getTranslatedName))
                         .map(name -> "Duplicate action set translated name: " + name)
                         .map(ValidationProblem::new)
-                        .toList();
+                        .collect(Collectors.toList());
 
         Collection<ValidationProblem> withinSetProblems =
-                actionSets.stream().flatMap(as -> as.validate().stream()).toList();
+                actionSets.stream().flatMap(as -> as.validate().stream()).collect(Collectors.toList());
 
         Collection<ValidationProblem> overallProblems = new ArrayList<>(0);
         overallProblems.addAll(duplicateActionSets);
@@ -108,7 +108,37 @@ public class ActionManifest{
         }
     }
 
-    public record ValidationProblem(String issue){}
+    public static final class ValidationProblem{
+        private final String issue;
+
+        public ValidationProblem(String issue){
+            this.issue = issue;
+        }
+
+        public String issue(){
+            return issue;
+        }
+
+        @Override
+        public boolean equals(Object o){
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ValidationProblem that = (ValidationProblem) o;
+            return issue != null ? issue.equals(that.issue) : that.issue == null;
+        }
+
+        @Override
+        public int hashCode(){
+            return issue != null ? issue.hashCode() : 0;
+        }
+
+        @Override
+        public String toString(){
+            return "ValidationProblem{" +
+                    "issue='" + issue + '\'' +
+                    '}';
+        }
+    }
 
     @SuppressWarnings("DataFlowIssue")
     public static Stream<String> findDuplicates(Stream<String> stream) {

@@ -286,14 +286,18 @@ public class DesktopSimulatingXrActionAppState extends XrActionBaseAppState{
 
         if(changeModeLookAndMouseBinding.hasBecomeTrueThisTick()){
             switch(simulationMode){
-                case FLY_CAM -> {
+                case FLY_CAM:
                     simulationMode = SimulationMode.MOUSE;
                     cameraToMouseMode();
-                }
-                case MOUSE,LEFT_HAND,RIGHT_HAND  -> {
+                    break;
+                case MOUSE:
+                case LEFT_HAND:
+                case RIGHT_HAND:
                     simulationMode = SimulationMode.FLY_CAM;
                     cameraToFlycamMode();
-                }
+                    break;
+                default:
+                    break;
             }
             updateModeText();
         }
@@ -565,7 +569,47 @@ public class DesktopSimulatingXrActionAppState extends XrActionBaseAppState{
         boolean hasBecomeTrueThisTick();
     }
 
-    private record BoundActionHandle(NonVrKeyBinding keyBinding, boolean toggleMode){}
+    private static final class BoundActionHandle{
+        private final NonVrKeyBinding keyBinding;
+        private final boolean toggleMode;
+
+        private BoundActionHandle(NonVrKeyBinding keyBinding, boolean toggleMode){
+            this.keyBinding = keyBinding;
+            this.toggleMode = toggleMode;
+        }
+
+        public NonVrKeyBinding keyBinding(){
+            return keyBinding;
+        }
+
+        public boolean toggleMode(){
+            return toggleMode;
+        }
+
+        @Override
+        public boolean equals(Object o){
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            BoundActionHandle that = (BoundActionHandle) o;
+            if (toggleMode != that.toggleMode) return false;
+            return keyBinding != null ? keyBinding.equals(that.keyBinding) : that.keyBinding == null;
+        }
+
+        @Override
+        public int hashCode(){
+            int result = keyBinding != null ? keyBinding.hashCode() : 0;
+            result = 31 * result + (toggleMode ? 1 : 0);
+            return result;
+        }
+
+        @Override
+        public String toString(){
+            return "BoundActionHandle{" +
+                    "keyBinding=" + keyBinding +
+                    ", toggleMode=" + toggleMode +
+                    '}';
+        }
+    }
 
     private enum SimulationMode{
         FLY_CAM,

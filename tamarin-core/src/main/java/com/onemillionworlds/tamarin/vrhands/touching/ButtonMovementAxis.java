@@ -29,12 +29,16 @@ public enum ButtonMovementAxis{
         X, Y, Z;
 
         float extract(Vector3f vector){
-            return switch(this){
-                case X -> vector.x;
-                case Y -> vector.y;
-                case Z -> vector.z;
-                default -> throw new IllegalStateException();
-            };
+            switch(this){
+                case X:
+                    return vector.x;
+                case Y:
+                    return vector.y;
+                case Z:
+                    return vector.z;
+                default:
+                    throw new IllegalStateException();
+            }
         }
     }
 

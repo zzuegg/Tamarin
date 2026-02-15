@@ -155,9 +155,12 @@ public class KinematicHandPhysics implements BoundHandFunction{
                     PhysicsCollisionObject physicsCollisionObject =
                             grabShape == event.getObjectA() ? event.getObjectB() : event.getObjectA();
 
-                    if(physicsCollisionObject instanceof PhysicsRigidBody physicsRigidBody){
+                    if(physicsCollisionObject instanceof PhysicsRigidBody){
+                        PhysicsRigidBody physicsRigidBody = (PhysicsRigidBody) physicsCollisionObject;
                         boolean shouldBeGrabbed = !physicsRigidBody.isKinematic() && physicsRigidBody.getMass() > 0f;
-                        if(physicsCollisionObject.getApplicationData() instanceof VrMinieAdvice itemVrMinieAdvice){
+                        Object appData = physicsCollisionObject.getApplicationData();
+                        if(appData instanceof VrMinieAdvice){
+                            VrMinieAdvice itemVrMinieAdvice = (VrMinieAdvice) appData;
                             shouldBeGrabbed = itemVrMinieAdvice.canBePickedUp();
                         }
                         if(shouldBeGrabbed){
@@ -285,9 +288,45 @@ public class KinematicHandPhysics implements BoundHandFunction{
         }
     }
 
-    private record JointPair(
-            HandJoint from,
-            HandJoint to
-    ){
+    private static final class JointPair{
+        private final HandJoint from;
+        private final HandJoint to;
+
+        private JointPair(HandJoint from, HandJoint to){
+            this.from = from;
+            this.to = to;
+        }
+
+        public HandJoint from(){
+            return from;
+        }
+
+        public HandJoint to(){
+            return to;
+        }
+
+        @Override
+        public boolean equals(Object o){
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            JointPair jointPair = (JointPair) o;
+            if (from != jointPair.from) return false;
+            return to == jointPair.to;
+        }
+
+        @Override
+        public int hashCode(){
+            int result = from != null ? from.hashCode() : 0;
+            result = 31 * result + (to != null ? to.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public String toString(){
+            return "JointPair{" +
+                    "from=" + from +
+                    ", to=" + to +
+                    '}';
+        }
     }
 }

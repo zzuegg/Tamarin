@@ -43,15 +43,20 @@ public class AdditionalViewportData{
             String name = "Overlay Viewport " + Optional.ofNullable(rootNode).map(Spatial::getName).orElse("null") + " " +eyeSide+ " " + overlayViewPorts.size()/2;
             Camera camera = additionalViewportRequest.getCameraOverride().orElse(eyeSide == EyeSide.LEFT ? leftCamera : rightCamera);
 
-            ViewPort newViewport =
-                    switch(additionalViewportRequest.getType()){
-                        case MAINVIEW ->
-                            renderManager.createMainView(name, camera);
-                        case POSTVIEW->
-                            renderManager.createPostView(name, camera);
-                        case PREVIEW->
-                            renderManager.createPreView(name, camera);
-                    };
+            ViewPort newViewport;
+            switch(additionalViewportRequest.getType()){
+                case MAINVIEW:
+                    newViewport = renderManager.createMainView(name, camera);
+                    break;
+                case POSTVIEW:
+                    newViewport = renderManager.createPostView(name, camera);
+                    break;
+                case PREVIEW:
+                    newViewport = renderManager.createPreView(name, camera);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + additionalViewportRequest.getType());
+            }
             newViewport.setClearFlags(additionalViewportRequest.isClearFlags_color(), additionalViewportRequest.isClearFlags_depth(), additionalViewportRequest.isClearFlags_stencil());
             if(rootNode!=null){
                 newViewport.attachScene(rootNode);
@@ -80,9 +85,17 @@ public class AdditionalViewportData{
     public void cleanup(){
         overlayViewPorts.values().forEach((vp) -> {
             switch(additionalViewportRequest.getType()){
-                case MAINVIEW -> renderManager.removeMainView(vp);
-                case POSTVIEW -> renderManager.removePostView(vp);
-                case PREVIEW -> renderManager.removePreView(vp);
+                case MAINVIEW:
+                    renderManager.removeMainView(vp);
+                    break;
+                case POSTVIEW:
+                    renderManager.removePostView(vp);
+                    break;
+                case PREVIEW:
+                    renderManager.removePreView(vp);
+                    break;
+                default:
+                    break;
             }
         });
 

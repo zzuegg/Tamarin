@@ -80,31 +80,131 @@ public class InProgressXrRender{
         return rightSwapchainImageIndex;
     }
 
-    public record EyePositionData(
-            Vector3f eyePosition,
-            Quaternion eyeRotation,
-            FieldOfViewData fieldOfView
-    ){
+    public static final class EyePositionData{
+        private final Vector3f eyePosition;
+        private final Quaternion eyeRotation;
+        private final FieldOfViewData fieldOfView;
+
+        public EyePositionData(Vector3f eyePosition, Quaternion eyeRotation, FieldOfViewData fieldOfView){
+            this.eyePosition = eyePosition;
+            this.eyeRotation = eyeRotation;
+            this.fieldOfView = fieldOfView;
+        }
+
+        public Vector3f eyePosition(){
+            return eyePosition;
+        }
+
+        public Quaternion eyeRotation(){
+            return eyeRotation;
+        }
+
+        public FieldOfViewData fieldOfView(){
+            return fieldOfView;
+        }
+
         public Matrix4f calculateProjectionMatrix(float nearClip, float farClip){
             return createProjectionMatrix(fieldOfView, nearClip, farClip);
+        }
+
+        @Override
+        public boolean equals(Object o){
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            EyePositionData that = (EyePositionData) o;
+            if (eyePosition != null ? !eyePosition.equals(that.eyePosition) : that.eyePosition != null) return false;
+            if (eyeRotation != null ? !eyeRotation.equals(that.eyeRotation) : that.eyeRotation != null) return false;
+            return fieldOfView != null ? fieldOfView.equals(that.fieldOfView) : that.fieldOfView == null;
+        }
+
+        @Override
+        public int hashCode(){
+            int result = eyePosition != null ? eyePosition.hashCode() : 0;
+            result = 31 * result + (eyeRotation != null ? eyeRotation.hashCode() : 0);
+            result = 31 * result + (fieldOfView != null ? fieldOfView.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public String toString(){
+            return "EyePositionData{" +
+                    "eyePosition=" + eyePosition +
+                    ", eyeRotation=" + eyeRotation +
+                    ", fieldOfView=" + fieldOfView +
+                    '}';
         }
     }
 
     /**
-     * The field of view data for a single eye. NOTE! the left and right angles are held seperately because the OPENXR runtime
-     * may request a non symmetric field of view. This is the case for the Oculus Quest 2. Do not just add left and right
+     * The field of view data for a single eye. NOTE! the left and right angles are held separately because the OPENXR runtime
+     * may request a non-symmetric field of view. This is the case for the Oculus Quest 2. Do not just add left and right
      * together and use that as the field of view.
-     * @param angleLeft angle in radians
-     * @param angleRight angle in radians
-     * @param angleUp angle in radians
-     * @param angleDown angle in radians
      */
-    public record FieldOfViewData(
-            float angleLeft,
-            float angleRight,
-            float angleUp,
-            float angleDown
-    ){}
+    public static final class FieldOfViewData{
+        private final float angleLeft;
+        private final float angleRight;
+        private final float angleUp;
+        private final float angleDown;
+
+        /**
+         * @param angleLeft angle in radians
+         * @param angleRight angle in radians
+         * @param angleUp angle in radians
+         * @param angleDown angle in radians
+         */
+        public FieldOfViewData(float angleLeft, float angleRight, float angleUp, float angleDown){
+            this.angleLeft = angleLeft;
+            this.angleRight = angleRight;
+            this.angleUp = angleUp;
+            this.angleDown = angleDown;
+        }
+
+        public float angleLeft(){
+            return angleLeft;
+        }
+
+        public float angleRight(){
+            return angleRight;
+        }
+
+        public float angleUp(){
+            return angleUp;
+        }
+
+        public float angleDown(){
+            return angleDown;
+        }
+
+        @Override
+        public boolean equals(Object o){
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FieldOfViewData that = (FieldOfViewData) o;
+            return Float.compare(that.angleLeft, angleLeft) == 0 &&
+                    Float.compare(that.angleRight, angleRight) == 0 &&
+                    Float.compare(that.angleUp, angleUp) == 0 &&
+                    Float.compare(that.angleDown, angleDown) == 0;
+        }
+
+        @Override
+        public int hashCode(){
+            int result = (angleLeft != +0.0f ? Float.floatToIntBits(angleLeft) : 0);
+            result = 31 * result + (angleRight != +0.0f ? Float.floatToIntBits(angleRight) : 0);
+            result = 31 * result + (angleUp != +0.0f ? Float.floatToIntBits(angleUp) : 0);
+            result = 31 * result + (angleDown != +0.0f ? Float.floatToIntBits(angleDown) : 0);
+            return result;
+        }
+
+        @Override
+        public String toString(){
+            return "FieldOfViewData{" +
+                    "angleLeft=" + angleLeft +
+                    ", angleRight=" + angleRight +
+                    ", angleUp=" + angleUp +
+                    ", angleDown=" + angleDown +
+                    '}';
+        }
+    }
 
     /**
      * Creates and returns a Matrix4f that can be used as a projection matrix

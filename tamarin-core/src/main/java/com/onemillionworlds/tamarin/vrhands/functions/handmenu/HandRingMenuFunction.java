@@ -206,7 +206,9 @@ public class HandRingMenuFunction<T> implements BoundHandFunction{
             attachOrConfigureIcon(menuItemNode, menuItem);
             menuNode.attachChild(menuItemNode);
 
-            if(menuItem instanceof MenuBranch<T> menuBranch){
+            if(menuItem instanceof MenuBranch){
+                @SuppressWarnings("unchecked")
+                MenuBranch<T> menuBranch = (MenuBranch<T>) menuItem;
                 ArrayList<MenuBranch<T>> ringPathControlled = new ArrayList<>(List.of(menuBranch));
                 buildSubItem(1, angle, menuBranch.getSubItems(), ringPathControlled);
                 branchPositions.add(new BranchPositionData(List.of(), ringPathControlled, menuItemNode.getWorldTranslation(), menuBranch));
@@ -255,7 +257,9 @@ public class HandRingMenuFunction<T> implements BoundHandFunction{
 
             ringCentreNode.attachChild(menuItemNode);
 
-            if(menuItem instanceof MenuBranch<T> menuBranch){
+            if(menuItem instanceof MenuBranch){
+                @SuppressWarnings("unchecked")
+                MenuBranch<T> menuBranch = (MenuBranch<T>) menuItem;
                 ArrayList<MenuBranch<T>> branchOwnedPath = new ArrayList<>(parents);
                 branchOwnedPath.add(menuBranch);
                 buildSubItem(ringIndex + 1, angle, menuBranch.getSubItems(), branchOwnedPath);
