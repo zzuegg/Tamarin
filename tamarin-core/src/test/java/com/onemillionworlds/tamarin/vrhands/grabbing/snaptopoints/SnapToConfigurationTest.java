@@ -230,6 +230,28 @@ class SnapToConfigurationTest{
 
     }
 
-    private record Arguments(BoundHand handSide, Vector3f localPosition, Vector3f globalPosition) {}
+    private static final class Arguments{
+        private final BoundHand handSide;
+        private final Vector3f localPosition;
+        private final Vector3f globalPosition;
+
+        private Arguments(BoundHand handSide, Vector3f localPosition, Vector3f globalPosition){
+            this.handSide = handSide;
+            this.localPosition = localPosition;
+            this.globalPosition = globalPosition;
+        }
+
+        public BoundHand handSide(){
+            return handSide;
+        }
+
+        public Vector3f localPosition(){
+            return localPosition;
+        }
+
+        public Vector3f globalPosition(){
+            return globalPosition;
+        }
+    }
 
 }

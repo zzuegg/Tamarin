@@ -24,7 +24,8 @@ public class XrAppState extends XrVrAppState{
     protected void initialize(Application app){
         super.initialize(app);
         long windowHandle;
-        if (app.getContext() instanceof LwjglWindow lwjglWindow) {
+        if (app.getContext() instanceof LwjglWindow) {
+            LwjglWindow lwjglWindow = (LwjglWindow) app.getContext();
             windowHandle = lwjglWindow.getWindowHandle();
         }else{
             //maybe something like this on android? (and then using the XrGraphicsBindingEGLMNDX binding)

@@ -74,7 +74,8 @@ public class MechanicalButton extends Node{
                 if(useFullBoundingBoxBasedCollisions){
                     //this isn't a performance optimisation (although it may also be that) it is to give more stable
                     //collisions with the button if the player plunges their hand into it
-                    if(other instanceof BoundingSphere boundingSphere){
+                    if(other instanceof BoundingSphere){
+                        BoundingSphere boundingSphere = (BoundingSphere) other;
                         BoundingSphere localSphere = new BoundingSphere(boundingSphere.getRadius(), this.worldToLocal(boundingSphere.getCenter(), null));
                         CollisionResults newResults = new CollisionResults();
                         overallBoundsLocalisedToSpatialOrigin.collideWith(localSphere, newResults);
@@ -153,7 +154,8 @@ public class MechanicalButton extends Node{
     private Geometry findGeometry(Spatial buttonGeometry){
         if(buttonGeometry instanceof Geometry){
             return (Geometry) buttonGeometry;
-        } else if(buttonGeometry instanceof Node node){
+        } else if(buttonGeometry instanceof Node){
+            Node node = (Node) buttonGeometry;
             for(Spatial child : node.getChildren()){
                 Geometry found = findGeometry(child);
                 if(found != null){

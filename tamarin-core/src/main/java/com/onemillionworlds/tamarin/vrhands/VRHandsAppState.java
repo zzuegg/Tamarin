@@ -357,7 +357,8 @@ public class VRHandsAppState extends BaseAppState{
         if(spatial.getControl(SkinningControl.class) != null){
             spatial.removeFromParent();
             return spatial;
-        } else if(spatial instanceof Node node){
+        } else if(spatial instanceof Node){
+            Node node = (Node) spatial;
             if(node.getChildren().size() > 1){
                 throw new RuntimeException("Could not find skinnable model due to branched world or no skinning control");
             }

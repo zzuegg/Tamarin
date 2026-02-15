@@ -94,7 +94,8 @@ public class MechanicalToggle extends Node{
                 if(useFullBoundingBoxBasedCollisions){
                     //this isn't a performance optimisation (although it may also be that) it is to give more stable
                     //collisions with the button if the player plunges their hand into it
-                    if(other instanceof BoundingSphere boundingSphere){
+                    if(other instanceof BoundingSphere){
+                        BoundingSphere boundingSphere = (BoundingSphere) other;
                         BoundingSphere localSphere = new BoundingSphere(boundingSphere.getRadius(), this.worldToLocal(boundingSphere.getCenter(), null));
                         CollisionResults newResults = new CollisionResults();
                         overallBoundsLocalisedToSpatialOrigin.collideWith(localSphere, newResults);
@@ -254,9 +255,10 @@ public class MechanicalToggle extends Node{
      * Returns the first geometry it can recursively find in the spatial
      */
     private Geometry findGeometry(Spatial item){
-        if(item instanceof Geometry buttonGeometry){
-            return buttonGeometry;
-        } else if(item instanceof Node node){
+        if(item instanceof Geometry){
+            return (Geometry) item;
+        } else if(item instanceof Node){
+            Node node = (Node) item;
             for(Spatial child : node.getChildren()){
                 Geometry found = findGeometry(child);
                 if(found != null){

@@ -21,6 +21,7 @@ import com.onemillionworlds.tamarin.vinette.VrVignetteState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * When added the player will be connected to the physics world. Meaning:
@@ -223,12 +224,13 @@ public class PlayerVrPhysicsAppState extends BaseAppState{
                     .stream()
                     .filter(str -> {
                         Object applicationData = str.getCollisionObject().getApplicationData();
-                        if(applicationData instanceof VrMinieAdvice vrMinieAdvice){
+                        if(applicationData instanceof VrMinieAdvice){
+                            VrMinieAdvice vrMinieAdvice = (VrMinieAdvice) applicationData;
                             return vrMinieAdvice.shouldPreventPlayerWalkingThrough();
                         }
                         return true;
                     })
-                    .toList();
+                    .collect(Collectors.toList());
             if(results.isEmpty()){
                 // allow the motion
                 getObserver().setLocalTranslation(getObserver().getWorldTranslation().add(walkAmount.x, 0, walkAmount.y));

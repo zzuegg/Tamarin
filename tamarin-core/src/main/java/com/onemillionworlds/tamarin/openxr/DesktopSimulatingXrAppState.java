@@ -40,14 +40,20 @@ public class DesktopSimulatingXrAppState extends XrBaseAppState{
     public ViewportConfigurator addAdditionalViewport(AdditionalViewportRequest additionalViewportRequest){
         Camera camera = additionalViewportRequest.getCameraOverride().orElse(getApplication().getCamera());
 
-        ViewPort overlay = switch(additionalViewportRequest.getType()){
+        ViewPort overlay;
+        switch(additionalViewportRequest.getType()){
             case MAINVIEW:
-                yield getApplication().getRenderManager().createMainView("xrSimulatedViewport", camera);
+                overlay = getApplication().getRenderManager().createMainView("xrSimulatedViewport", camera);
+                break;
             case PREVIEW:
-                yield getApplication().getRenderManager().createPreView("xrSimulatedViewport", camera);
+                overlay = getApplication().getRenderManager().createPreView("xrSimulatedViewport", camera);
+                break;
             case POSTVIEW:
-                yield getApplication().getRenderManager().createPostView("xrSimulatedViewport", camera);
-        };
+                overlay = getApplication().getRenderManager().createPostView("xrSimulatedViewport", camera);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + additionalViewportRequest.getType());
+        }
         overlay.setClearFlags(
                 additionalViewportRequest.isClearFlags_color(),
                 additionalViewportRequest.isClearFlags_depth(),

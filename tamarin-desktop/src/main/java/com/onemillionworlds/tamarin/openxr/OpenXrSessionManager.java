@@ -1023,9 +1023,23 @@ public class OpenXrSessionManager{
         }
     }
 
-    private record ExtensionsCheckResult(
-            PointerBuffer extensionsToLoadBuffer,
-            Map<String, Boolean> extensionsLoaded){
+    private static final class ExtensionsCheckResult{
+        private final PointerBuffer extensionsToLoadBuffer;
+        private final Map<String, Boolean> extensionsLoaded;
+
+        private ExtensionsCheckResult(PointerBuffer extensionsToLoadBuffer, Map<String, Boolean> extensionsLoaded){
+            this.extensionsToLoadBuffer = extensionsToLoadBuffer;
+            this.extensionsLoaded = extensionsLoaded;
+        }
+
+        public PointerBuffer extensionsToLoadBuffer(){
+            return extensionsToLoadBuffer;
+        }
+
+        public Map<String, Boolean> extensionsLoaded(){
+            return extensionsLoaded;
+        }
+
         public boolean missingOpenGL(){
             return !extensionsLoaded.get(XR_KHR_OPENGL_ENABLE_EXTENSION_NAME);
         }
@@ -1044,13 +1058,52 @@ public class OpenXrSessionManager{
         }
     }
 
-    private record LayerCheckResult(PointerBuffer wantedLayers, boolean hasCoreValidationLayer){}
+    private static final class LayerCheckResult{
+        private final PointerBuffer wantedLayers;
+        private final boolean hasCoreValidationLayer;
 
-    private record Swapchain (
-        XrSwapchain handle,
-        int width,
-        int height,
-        XrSwapchainImageOpenGLKHR.Buffer images
-    ){}
+        private LayerCheckResult(PointerBuffer wantedLayers, boolean hasCoreValidationLayer){
+            this.wantedLayers = wantedLayers;
+            this.hasCoreValidationLayer = hasCoreValidationLayer;
+        }
+
+        public PointerBuffer wantedLayers(){
+            return wantedLayers;
+        }
+
+        public boolean hasCoreValidationLayer(){
+            return hasCoreValidationLayer;
+        }
+    }
+
+    private static final class Swapchain{
+        private final XrSwapchain handle;
+        private final int width;
+        private final int height;
+        private final XrSwapchainImageOpenGLKHR.Buffer images;
+
+        private Swapchain(XrSwapchain handle, int width, int height, XrSwapchainImageOpenGLKHR.Buffer images){
+            this.handle = handle;
+            this.width = width;
+            this.height = height;
+            this.images = images;
+        }
+
+        public XrSwapchain handle(){
+            return handle;
+        }
+
+        public int width(){
+            return width;
+        }
+
+        public int height(){
+            return height;
+        }
+
+        public XrSwapchainImageOpenGLKHR.Buffer images(){
+            return images;
+        }
+    }
 
 }

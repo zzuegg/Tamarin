@@ -873,9 +873,22 @@ public class XrActionAppState extends XrActionBaseAppState{
     }
 
 
-    private record PendingActions(
-        ActionManifest pendingActionSets,
-        List<String> pendingActiveActionSetNames
-    ){}
+    private static final class PendingActions{
+        private final ActionManifest pendingActionSets;
+        private final List<String> pendingActiveActionSetNames;
+
+        private PendingActions(ActionManifest pendingActionSets, List<String> pendingActiveActionSetNames){
+            this.pendingActionSets = pendingActionSets;
+            this.pendingActiveActionSetNames = pendingActiveActionSetNames;
+        }
+
+        private ActionManifest pendingActionSets(){
+            return pendingActionSets;
+        }
+
+        private List<String> pendingActiveActionSetNames(){
+            return pendingActiveActionSetNames;
+        }
+    }
 
 }

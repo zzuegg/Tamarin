@@ -49,11 +49,13 @@ public class OverallBoundsCalculator{
         Vector3f accumulatedTranslation = parentRotation.mult(parentTranslation.add(localTranslation));
         Quaternion accumulatedRotation = parentRotation.mult(localRotation);
 
-        if (spatial instanceof Node node) {
+        if (spatial instanceof Node) {
+            Node node = (Node) spatial;
             for (Spatial child : node.getChildren()) {
                 updateOverallBounds(child, accumulatedTranslation, accumulatedRotation, overallBounds);
             }
-        } else if (spatial instanceof Geometry geometry ) {
+        } else if (spatial instanceof Geometry) {
+            Geometry geometry = (Geometry) spatial;
             BoundingBox localBounds = getBoundingBox(geometry);
 
             if (localBounds != null) {
@@ -75,7 +77,8 @@ public class OverallBoundsCalculator{
         BoundingBox localBounds;
         if (geometry.getModelBound() instanceof BoundingBox){
             localBounds = (BoundingBox) geometry.getModelBound();
-        } else  if (geometry.getModelBound() instanceof BoundingSphere boundingSphere){
+        } else  if (geometry.getModelBound() instanceof BoundingSphere){
+            BoundingSphere boundingSphere = (BoundingSphere) geometry.getModelBound();
             localBounds = new BoundingBox(boundingSphere.getCenter(), boundingSphere.getRadius(), boundingSphere.getRadius(), boundingSphere.getRadius());
         } else {
             throw new RuntimeException("Unsupported bounding box type " + geometry.getModelBound().getClass().getName());
