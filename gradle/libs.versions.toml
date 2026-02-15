@@ -1,5 +1,5 @@
 [versions]
-jme = "3.8.0-stable"
+jme = "3.9.0-beta1"
 openxrBindingsNative = "1.0.2"
 
 [libraries]
