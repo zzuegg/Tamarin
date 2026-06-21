@@ -85,7 +85,6 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memLengthNT1;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.Struct;
@@ -539,7 +538,6 @@ public class OpenXrSessionManager{
      * @return if the application should exit
      */
     private boolean pollEvents() {
-        GLFW.glfwPollEvents();
         XrEventDataBaseHeader event = readNextOpenXREvent();
         if (event == null) {
             return false;
